@@ -20,12 +20,32 @@ class Register(TemplateView):
 
 
 def register_user(request):
-    pass
+    data = request.POST
+    user = User.objects.create_user(
+        username = data['username'],
+        password = data['password'],
+        email = data['email'],
+        first_name = data['first_name'],
+        last_name = data['last_name']
+    )
+    return login_user(request)
 
 
 def login_user(request):
-    pass
+    data = request.POST
+    username = data['username']
+    password = data['password']
+    user = authenticate(
+        username = username,
+        password = password
+    )
+    if user is not None:
+        login(request = request, user = user)
+    else:
+        return HttpResponseRedirect(redirect_to='/')
+    return HttpResponseRedirect(redirect_to='/success')
 
 
 def logout_user(request):
-    pass
+    logout(request)
+    return HttpResponseRedirect(redirect_to='/')
